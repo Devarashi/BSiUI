@@ -8,10 +8,12 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 public class ServerDhProtocol {
-    private static final long P = 23;
     private static final long G = 5;
-    private static final long SECRET_B = 3;
+
     static Connection setupConnection(ServerSocket welcomeSocket) throws IOException, ClassNotFoundException {
+        long p = MathUtils.generateRandomNumber();
+        long secretB = MathUtils.generateRandomNumber();
+
         Socket socket = welcomeSocket.accept();
         ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
 
@@ -20,7 +22,7 @@ public class ServerDhProtocol {
 
         ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
         JSONObject pgToClient = new JSONObject();
-        pgToClient.put("p", String.valueOf(P));
+        pgToClient.put("p", String.valueOf(p));
         pgToClient.put("g", String.valueOf(G));
         out.writeObject(pgToClient);
 
@@ -29,14 +31,13 @@ public class ServerDhProtocol {
         long a = extractLong(secretFromClient, "a");
 
         JSONObject secretToClient = new JSONObject();
-        String secretB = ProtocolMathUtils.calculateSecret(SECRET_B, P, G);
-        secretToClient.put("b", secretB);
+        secretToClient.put("b", MathUtils.calculateSecret(secretB, p, G));
         out.writeObject(secretToClient);
 
         JSONObject encryptionFromClient = (JSONObject) in.readObject();
         if(!validEncryptionRequest(encryptionFromClient)) throw new InvalidObjectException("Invalid encryption");
 
-        String secret = ProtocolMathUtils.calculateSecret(SECRET_B, P, a);
+        String secret = MathUtils.calculateSecret(secretB, p, a);
         return new Connection(in, out, socket, Long.valueOf(secret));
     }
 

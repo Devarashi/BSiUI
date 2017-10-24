@@ -7,7 +7,6 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 public class ClientDhProtocol {
-    private static final long SERCRET_A = 4;
 
     static Connection setupConnection(String host, int port, String encryption) throws IOException, ClassNotFoundException {
         Socket socket = new Socket(host, port);
@@ -25,8 +24,8 @@ public class ClientDhProtocol {
         long g = extractLong(pgFromServer, "g");
 
         JSONObject secretToServer = new JSONObject();
-        String secretA = ProtocolMathUtils.calculateSecret(SERCRET_A, p, g);
-        secretToServer.put("a", secretA);
+        long secretA = MathUtils.generateRandomNumber();
+        secretToServer.put("a", MathUtils.calculateSecret(secretA, p, g));
         out.writeObject(secretToServer);
 
         JSONObject secretFromServer = (JSONObject) in.readObject();
@@ -37,7 +36,7 @@ public class ClientDhProtocol {
         encryptionToServer.put("encryption", "none");
         out.writeObject(encryptionToServer);
 
-        String secret = ProtocolMathUtils.calculateSecret(SERCRET_A, p, b);
+        String secret = MathUtils.calculateSecret(secretA, p, b);
         return new Connection(in, out, socket, Long.valueOf(secret));
     }
 
