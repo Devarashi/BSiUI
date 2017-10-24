@@ -7,15 +7,17 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 public class Connection {
+    private ObjectInputStream in;
+    private ObjectOutputStream out;
+    private Socket socket;
+    private long secret;
 
-    public ObjectInputStream in;
-    public ObjectOutputStream out;
-    public Socket socket;
-
-    public Connection(ObjectInputStream in, ObjectOutputStream out, Socket socket) {
+    public Connection(ObjectInputStream in, ObjectOutputStream out, Socket socket, long secret) {
+        System.out.println(secret);
         this.in = in;
         this.out = out;
         this.socket = socket;
+        this.secret = secret;
     }
 
     public void sendMessage(String message) throws IOException {

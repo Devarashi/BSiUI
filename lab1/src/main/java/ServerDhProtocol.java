@@ -8,8 +8,9 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 public class ServerDhProtocol {
-    private static final String P = "23";
-    private static final String G = "5";
+    private static final long P = 23;
+    private static final long G = 5;
+    private static final long SECRET_B = 3;
     static Connection setupConnection(ServerSocket welcomeSocket) throws IOException, ClassNotFoundException {
         Socket socket = welcomeSocket.accept();
         ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
@@ -19,21 +20,28 @@ public class ServerDhProtocol {
 
         ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
         JSONObject pgToClient = new JSONObject();
-        pgToClient.put("p", P);
-        pgToClient.put("g", G);
+        pgToClient.put("p", String.valueOf(P));
+        pgToClient.put("g", String.valueOf(G));
         out.writeObject(pgToClient);
 
         JSONObject secretFromClient = (JSONObject) in.readObject();
         if(!validSecretRequest(secretFromClient)) throw new InvalidObjectException("Invalid secrect A");
+        long a = extractLong(secretFromClient, "a");
 
         JSONObject secretToClient = new JSONObject();
-        secretToClient.put("b", "123");
+        String secretB = ProtocolMathUtils.calculateSecret(SECRET_B, P, G);
+        secretToClient.put("b", secretB);
         out.writeObject(secretToClient);
 
         JSONObject encryptionFromClient = (JSONObject) in.readObject();
         if(!validEncryptionRequest(encryptionFromClient)) throw new InvalidObjectException("Invalid encryption");
 
-        return new Connection(in, out, socket);
+        String secret = ProtocolMathUtils.calculateSecret(SECRET_B, P, a);
+        return new Connection(in, out, socket, Long.valueOf(secret));
+    }
+
+    private static long extractLong(JSONObject pgFromServer, String key) {
+        return Long.valueOf((String) pgFromServer.get(key));
     }
 
     private static boolean validEncryptionRequest(JSONObject request) {
@@ -51,16 +59,16 @@ public class ServerDhProtocol {
     }
 
     private static boolean validSecretRequest(JSONObject request) {
-        return request.containsKey("a") && isInteger((String)request.get("a"));
+        return request.containsKey("a") && isLong((String)request.get("a"));
     }
 
     private static boolean validInitRequest(JSONObject request) {
         return request.containsKey("request") && request.get("request").equals("keys");
     }
 
-    public static boolean isInteger(String s) {
+    public static boolean isLong(String s) {
         try {
-            Integer.parseInt(s);
+            Long.parseLong(s);
         } catch(NumberFormatException e) {
             return false;
         } catch(NullPointerException e) {

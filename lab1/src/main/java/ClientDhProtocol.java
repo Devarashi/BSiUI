@@ -7,6 +7,8 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 public class ClientDhProtocol {
+    private static final long SERCRET_A = 4;
+
     static Connection setupConnection(String host, int port, String encryption) throws IOException, ClassNotFoundException {
         Socket socket = new Socket(host, port);
         ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
@@ -19,33 +21,42 @@ public class ClientDhProtocol {
 
         JSONObject pgFromServer = (JSONObject) in.readObject();
         if(!validPGRequest(pgFromServer)) throw new InvalidObjectException("Invalid P and G");
+        long p = extractLong(pgFromServer, "p");
+        long g = extractLong(pgFromServer, "g");
 
         JSONObject secretToServer = new JSONObject();
-        secretToServer.put("a", "123");
+        String secretA = ProtocolMathUtils.calculateSecret(SERCRET_A, p, g);
+        secretToServer.put("a", secretA);
         out.writeObject(secretToServer);
 
         JSONObject secretFromServer = (JSONObject) in.readObject();
         if(!validSecretRequest(secretFromServer)) throw new InvalidObjectException("Invalid secrect B");
+        long b = extractLong(secretFromServer, "b");
 
         JSONObject encryptionToServer = new JSONObject();
         encryptionToServer.put("encryption", "none");
         out.writeObject(encryptionToServer);
 
-        return new Connection(in, out, socket);
+        String secret = ProtocolMathUtils.calculateSecret(SERCRET_A, p, b);
+        return new Connection(in, out, socket, Long.valueOf(secret));
+    }
+
+    private static long extractLong(JSONObject pgFromServer, String key) {
+        return Long.valueOf((String) pgFromServer.get(key));
     }
 
     private static boolean validPGRequest(JSONObject request) {
-        return request.containsKey("p") && isInteger((String) request.get("p"))
-                && request.containsKey("g") &&  isInteger((String) request.get("g"));
+        return request.containsKey("p") && isLong((String) request.get("p"))
+                && request.containsKey("g") &&  isLong((String) request.get("g"));
     }
 
     private static boolean validSecretRequest(JSONObject request) {
-        return request.containsKey("b") && isInteger((String)request.get("b"));
+        return request.containsKey("b") && isLong((String)request.get("b"));
     }
 
-    public static boolean isInteger(String s) {
+    public static boolean isLong(String s) {
         try {
-            Integer.parseInt(s);
+            Long.parseLong(s);
         } catch(NumberFormatException e) {
             return false;
         } catch(NullPointerException e) {
