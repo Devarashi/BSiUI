@@ -1,3 +1,4 @@
+import org.apache.commons.codec.binary.Base64;
 import org.json.simple.JSONObject;
 
 import java.io.*;
@@ -31,17 +32,12 @@ public class Server {
             response2.put("b", "123");
             out.writeObject(response2);
 
-           JSONObject request3 = (JSONObject) in.readObject();
+            JSONObject request3 = (JSONObject) in.readObject();
             System.out.println("Received: " + request3.toJSONString());
             //done
 
-
             JSONObject msg = (JSONObject) in.readObject();
-            System.out.println("Received: " + msg.toJSONString());
-
-
-
-
+            System.out.println(new String(Base64.decodeBase64((byte[])msg.get("msg"))));
         }
     }
 }

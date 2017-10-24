@@ -2,6 +2,7 @@ import org.json.simple.JSONObject;
 
 import java.io.*;
 import java.net.Socket;
+import org.apache.commons.codec.binary.Base64;
 
 public class Client {
 
@@ -29,7 +30,7 @@ public class Client {
         out.writeObject(request3);
 
         JSONObject request4 = new JSONObject();
-        request4.put("msg", "witam");
+        request4.put("msg",  Base64.encodeBase64("witam".getBytes()));
         request4.put("from", "John");
         out.writeObject(request4);
 
