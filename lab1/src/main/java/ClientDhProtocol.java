@@ -6,8 +6,8 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 public class ClientDhProtocol {
-    static Connection setupConnection() throws IOException, ClassNotFoundException {
-        Socket socket = new Socket("localhost", 6789);
+    static Connection setupConnection(String host, int port, String encryption) throws IOException, ClassNotFoundException {
+        Socket socket = new Socket(host, port);
         ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
 
         JSONObject req1 = new JSONObject();

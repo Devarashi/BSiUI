@@ -3,14 +3,24 @@ import java.net.ServerSocket;
 
 
 public class Server {
+    private String host;
+    private int port;
 
-    public static void main(String[] args) throws IOException, ClassNotFoundException {
-        ServerSocket welcomeSocket = new ServerSocket(6789);
+    public Server(String host, int port) {
+        this.port = port;
+    }
 
+    public void startListening() throws IOException, ClassNotFoundException {
+        ServerSocket socket = new ServerSocket(port);
+        Connection connection = ServerDhProtocol.setupConnection(socket);
         while (true) {
-            Connection connection = ServerDhProtocol.setupConnection(welcomeSocket);
             connection.readMessage();
         }
+    }
+
+
+    public static void main(String[] args) throws IOException, ClassNotFoundException {
+        new Server("localhost",6789).startListening();
     }
 
 }

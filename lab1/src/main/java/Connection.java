@@ -23,6 +23,7 @@ public class Connection {
         request4.put("msg",  Base64.encodeBase64(message.getBytes()));
         request4.put("from", "John");
         out.writeObject(request4);
+
     }
 
 
