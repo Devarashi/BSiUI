@@ -1,5 +1,8 @@
+package connection;
+
 import org.apache.commons.codec.binary.Base64;
 import org.json.simple.JSONObject;
+import utils.CryptorUtil;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -36,10 +39,10 @@ public class Connection {
             return message;
         }
         if (encryption.equals("xor")) {
-            return Cryptor.xorCrypt(message, String.valueOf(secret));
+            return CryptorUtil.xorCrypt(message, String.valueOf(secret));
         }
         if (encryption.equals("cezar")) {
-            return Cryptor.cezarCrypt(message, CEZAR_SHIFT);
+            return CryptorUtil.cezarCrypt(message, CEZAR_SHIFT);
         }
         return null;
     }
@@ -63,10 +66,10 @@ public class Connection {
             return message;
         }
         if (encryption.equals("xor")) {
-            return Cryptor.xorCrypt(message, String.valueOf(secret));
+            return CryptorUtil.xorCrypt(message, String.valueOf(secret));
         }
         if (encryption.equals("cezar")) {
-            return Cryptor.cezarCrypt(message, -CEZAR_SHIFT);
+            return CryptorUtil.cezarCrypt(message, -CEZAR_SHIFT);
         }
         return null;
     }

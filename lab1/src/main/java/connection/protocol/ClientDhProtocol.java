@@ -1,4 +1,8 @@
+package connection.protocol;
+
+import connection.Connection;
 import org.json.simple.JSONObject;
+import utils.MathUtils;
 
 import java.io.IOException;
 import java.io.InvalidObjectException;
@@ -8,7 +12,7 @@ import java.net.Socket;
 
 public class ClientDhProtocol {
 
-    static Connection setupConnection(String host, int port, String encryption) throws IOException, ClassNotFoundException {
+    public static Connection setupConnection(String host, int port, String encryption) throws IOException, ClassNotFoundException {
         Socket socket = new Socket(host, port);
         ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
 

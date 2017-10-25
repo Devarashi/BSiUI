@@ -1,3 +1,6 @@
+import connection.protocol.ClientDhProtocol;
+import connection.Connection;
+
 import java.io.*;
 import java.util.Scanner;
 
@@ -20,7 +23,7 @@ public class Client {
         }
     }
 
-    private static void readAndSendMessage(Connection connection) throws IOException {
+    private void readAndSendMessage(Connection connection) throws IOException {
         Scanner reader = new Scanner(System.in);
         System.out.print("Enter message: " );
         String message = reader.next();
@@ -38,7 +41,7 @@ public class Client {
         if (args.length == 3) {
             encryption = args[2];
         }
-        System.out.println(encryption);
+
         new Client(host, port, encryption).connectToServer();
     }
 }

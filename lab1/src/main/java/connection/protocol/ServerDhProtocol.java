@@ -1,4 +1,8 @@
+package connection.protocol;
+
+import connection.Connection;
 import org.json.simple.JSONObject;
+import utils.MathUtils;
 
 import java.io.IOException;
 import java.io.InvalidObjectException;
@@ -10,7 +14,7 @@ import java.net.Socket;
 public class ServerDhProtocol {
     private static final long G = 5;
 
-    static Connection setupConnection(ServerSocket welcomeSocket) throws IOException, ClassNotFoundException {
+    public static Connection setupConnection(ServerSocket welcomeSocket) throws IOException, ClassNotFoundException {
         long p = MathUtils.generateRandomNumber();
         long secretB = MathUtils.generateRandomNumber();
 

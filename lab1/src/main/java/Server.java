@@ -1,12 +1,14 @@
+import connection.Connection;
+import connection.protocol.ServerDhProtocol;
+
 import java.io.*;
 import java.net.ServerSocket;
 
 
 public class Server {
-    private String host;
     private int port;
 
-    public Server(String host, int port) {
+    public Server(int port) {
         this.port = port;
     }
 
@@ -18,13 +20,12 @@ public class Server {
         }
     }
 
-
     public static void main(String[] args) throws IOException, ClassNotFoundException {
         int port = 6789;
         if (args.length == 1) {
             port = Integer.parseInt(args[0]);
         }
-        new Server("localhost",6789).startListening();
+        new Server(port).startListening();
     }
 
 }

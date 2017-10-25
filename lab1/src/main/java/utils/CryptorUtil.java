@@ -1,7 +1,9 @@
+package utils;
+
 import java.security.SecureRandom;
 import java.util.Arrays;
 
-public class Cryptor {
+public class CryptorUtil {
 
 
     //from: https://stackoverflow.com/questions/13187652/one-time-pad-encryption-and-decryption
