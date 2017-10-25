@@ -51,7 +51,9 @@ public class MathUtils {
     public static boolean isLong(String s) {
         try {
             Long.parseLong(s);
-        } catch(NumberFormatException | NullPointerException e) {
+        } catch(NumberFormatException e) {
+            return false;
+        } catch(NullPointerException e) {
             return false;
         }
         return true;
