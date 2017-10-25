@@ -4,14 +4,23 @@ import connection.protocol.ServerDhProtocol;
 import java.io.*;
 import java.net.ServerSocket;
 
-
+/**
+ * Client of TCP based simple server
+ */
 public class Server {
     private int port;
 
+    /**
+     * @param port on which server will listen for incoming connections
+     */
     public Server(int port) {
         this.port = port;
     }
 
+    /**
+     * Starts listening for incoming connections on port specified in constructor.
+     * Uses DH Protocol to establish connection.
+     */
     public void startListening() throws IOException, ClassNotFoundException {
         ServerSocket socket = new ServerSocket(port);
         Connection connection = ServerDhProtocol.setupConnection(socket);

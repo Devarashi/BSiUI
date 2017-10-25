@@ -3,6 +3,9 @@ package utils;
 import java.math.BigInteger;
 import java.util.Random;
 
+/**
+ * Utility class for math operations
+ */
 public class MathUtils {
 
     public static String calculateSecret(long s, long p, long g){
@@ -12,11 +15,17 @@ public class MathUtils {
         return g1.modPow(s1, p1).toString();
     }
 
+    /**
+     * @return random number between 3 and 53
+     */
     public static long generateRandomNumber(){
         return new Random().nextInt(50) + 3;
     }
 
-    //from: https://stackoverflow.com/questions/24006143/generating-a-random-prime-number-in-java
+    /**
+     * from: https://stackoverflow.com/questions/24006143/generating-a-random-prime-number-in-java
+     * @return random prime number within range from 1 to 1000
+     */
     public static long generateRandomPrimeNumber(){
         int num = 0;
         Random rand = new Random();
@@ -33,5 +42,20 @@ public class MathUtils {
         while ((divisor <= Math.sqrt(inputNum)) && (inputNum % divisor != 0))
             divisor += 2; //iterates through all possible divisors
         return inputNum % divisor != 0; //returns true/false
+    }
+
+
+    /**
+     * Checks if given string is of type Long
+     */
+    public static boolean isLong(String s) {
+        try {
+            Long.parseLong(s);
+        } catch(NumberFormatException e) {
+            return false;
+        } catch(NullPointerException e) {
+            return false;
+        }
+        return true;
     }
 }

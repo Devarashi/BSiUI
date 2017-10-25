@@ -4,17 +4,32 @@ import connection.Connection;
 import java.io.*;
 import java.util.Scanner;
 
+/**
+ * Client of TCP based simple chat
+ */
 public class Client {
     private String host;
     private int port;
     private String encryption;
 
+    /**
+     *
+     * @param host of server
+     * @param port of server
+     * @param encryption method used to encrypt messages
+     */
     public Client(String host, int port, String encryption) {
         this.host = host;
         this.port = port;
         this.encryption = encryption;
     }
 
+    /**
+     * Connects to server specified in constructor.
+     * Uses DH Protocol to establish connection.
+     * Enables to send messages to server after establishing connection.
+     * Encypts messages using algorithm specified in constructor.
+     */
     public void connectToServer() throws IOException, ClassNotFoundException {
         Connection connection = ClientDhProtocol.setupConnection(host, port, encryption);
 

@@ -1,6 +1,7 @@
 package connection.protocol;
 
 import connection.Connection;
+import connection.CryptionStrategy;
 import org.json.simple.JSONObject;
 import utils.MathUtils;
 
@@ -11,11 +12,23 @@ import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import static utils.MathUtils.isLong;
+
+/**
+ * Support for support Diffie-Hellman's Protocol on server side
+ */
 public class ServerDhProtocol {
     private static final long G = 5;
 
+    /**
+     *
+     * @param welcomeSocket socket on which server waits for new connections
+     * @return established connection with new client
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
     public static Connection setupConnection(ServerSocket welcomeSocket) throws IOException, ClassNotFoundException {
-        long p = MathUtils.generateRandomNumber();
+        long p = MathUtils.generateRandomPrimeNumber();
         long secretB = MathUtils.generateRandomNumber();
 
         Socket socket = welcomeSocket.accept();
@@ -43,7 +56,7 @@ public class ServerDhProtocol {
         String encryption = (String) encryptionFromClient.get("encryption");
 
         String secret = MathUtils.calculateSecret(secretB, p, a);
-        return new Connection(in, out, socket, Long.valueOf(secret), encryption);
+        return new Connection(in, out, socket, new CryptionStrategy(encryption, secret));
     }
 
     private static long extractLong(JSONObject pgFromServer, String key) {
@@ -72,15 +85,4 @@ public class ServerDhProtocol {
         return request.containsKey("request") && request.get("request").equals("keys");
     }
 
-    public static boolean isLong(String s) {
-        try {
-            Long.parseLong(s);
-        } catch(NumberFormatException e) {
-            return false;
-        } catch(NullPointerException e) {
-            return false;
-        }
-        // only got here if we didn't return false
-        return true;
-    }
 }
