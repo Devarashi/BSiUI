@@ -36,9 +36,10 @@ public class ServerDhProtocol {
 
         JSONObject encryptionFromClient = (JSONObject) in.readObject();
         if(!validEncryptionRequest(encryptionFromClient)) throw new InvalidObjectException("Invalid encryption");
+        String encryption = (String) encryptionFromClient.get("encryption");
 
         String secret = MathUtils.calculateSecret(secretB, p, a);
-        return new Connection(in, out, socket, Long.valueOf(secret));
+        return new Connection(in, out, socket, Long.valueOf(secret), encryption);
     }
 
     private static long extractLong(JSONObject pgFromServer, String key) {

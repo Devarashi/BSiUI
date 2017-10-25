@@ -28,6 +28,6 @@ public class Client {
     }
 
     public static void main(String[] args) throws IOException, ClassNotFoundException {
-        new Client("localhost", 6789, "none").connectToServer();
+        new Client("localhost", 6789, "cezar").connectToServer();
     }
 }

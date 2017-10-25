@@ -33,11 +33,11 @@ public class ClientDhProtocol {
         long b = extractLong(secretFromServer, "b");
 
         JSONObject encryptionToServer = new JSONObject();
-        encryptionToServer.put("encryption", "none");
+        encryptionToServer.put("encryption", encryption);
         out.writeObject(encryptionToServer);
 
         String secret = MathUtils.calculateSecret(secretA, p, b);
-        return new Connection(in, out, socket, Long.valueOf(secret));
+        return new Connection(in, out, socket, Long.valueOf(secret), encryption);
     }
 
     private static long extractLong(JSONObject pgFromServer, String key) {
