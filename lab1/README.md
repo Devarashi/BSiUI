@@ -1,5 +1,5 @@
 ### System requirements
-* Java 8
+* Java 7
 * Maven 4.0.0
 
 ### Run instructions
