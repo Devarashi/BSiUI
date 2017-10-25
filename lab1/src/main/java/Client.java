@@ -28,6 +28,17 @@ public class Client {
     }
 
     public static void main(String[] args) throws IOException, ClassNotFoundException {
-        new Client("localhost", 6789, "cezar").connectToServer();
+        String host = "localhost";
+        int port = 6789;
+        String encryption = "none";
+        if (args.length >= 2) {
+            host = args[0];
+            port = Integer.parseInt(args[1]);
+        }
+        if (args.length == 3) {
+            encryption = args[2];
+        }
+        System.out.println(encryption);
+        new Client(host, port, encryption).connectToServer();
     }
 }

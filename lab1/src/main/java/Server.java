@@ -20,6 +20,10 @@ public class Server {
 
 
     public static void main(String[] args) throws IOException, ClassNotFoundException {
+        int port = 6789;
+        if (args.length == 1) {
+            port = Integer.parseInt(args[0]);
+        }
         new Server("localhost",6789).startListening();
     }
 
