@@ -12,6 +12,7 @@ Można to wyświetlić wpisując w formularzu hasło "realpassword"
 ## Crypto
 * zad 3 - napisałem program, który xoruje tekst z kolejnymi kodami ascii i sprawdza czy tekst zawiera tekst 'ROZWAL' jeżeli tak to wyświetla zxorowany tekst i kończy działanie. Odnalazłem flagę ROZWAL_{SingleXorByteCipher}. Kod znajduje się w katalogu bob.
 
+* zad 4 - analizując kod, zauważyłem, że flaga zostanie wyświetlona, gdy znajdziemy kolizję 2 hashy, dla dwóch pól wejściowych. W programie funkcja hashująca używa algorytmu md5, którym hashuje stringa ze stałym prefixem "Sx12s;!,.alxMausA_!s" oraz sufixem z danego pola z formularza, a następnie zwraca z tego jedynie pierwsze 64 bity. Znalazłem, że istnieje coś takiego jak chosen-prefix collision jednak nie udało mi się znaleźć do tego żadnej gotowej biblioteki.
 
 
 * zad 6 - analizując częstość występowania liter w alfabecie angielskim (http://www.richkni.co.uk/php/crypta/freq.php), zauwazyłem, następujące zależonści: 'b' w tekście to najprawdopodobniej 't', 'd' to h, 's' to 'e'. Probowałem zxorować jednak nie przyniosło to rezultau, jak również probowałem szyfru cezara.
@@ -24,3 +25,4 @@ q -> w,
 j -> a,
 g -> l
 
+Sx12s;!,.alxMausA_!sa
